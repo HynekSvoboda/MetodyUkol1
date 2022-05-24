@@ -17,56 +17,40 @@ namespace MetodyUkol1
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
         }
-        private bool JePrvocislo(int n, ref int[] poleprvocisel)
+        private bool JePrvocislo(int cislo)
         {
             bool prvocislo = true;
-            int cislo;
-            for (int y = 0; n > y; y++)
+            if (cislo == 2) prvocislo = true;
+            else
             {
-                cislo = Convert.ToInt32(textBox1.Lines[y]);
-                if (cislo == 2 || cislo == 3)
-                {
-                    prvocislo = true;
-                    poleprvocisel[y] = cislo;
-                }
-                else
-                {
-                    for (int i = 2; i <= Math.Sqrt(cislo); i++)
+                if (cislo == 1 || cislo % 2 == 0) prvocislo = false;
+                else for (int delitel = 3; delitel <= Math.Sqrt(cislo) && prvocislo; ++delitel)
                     {
-                        if (cislo % i == 0)
-                        {
-                            prvocislo = false;
-                            break;
-                        }
-                        else
-                        {
-                            poleprvocisel[y] = cislo;
-                        }
+                        if (cislo % delitel == 0) prvocislo = false;
                     }
-                }
             }
             return prvocislo;
         }
-        private void Prepis(ListBox listboxik, int n, ref int[] poleprvocisel)
+        private void Prepis(ListBox listboxik,TextBox textboxik,int []polecisel)
         {
             listboxik.Items.Clear();
-            for (int i = 0; i < n; i++)
+            foreach(int i in polecisel )
             {
-                if (poleprvocisel[i] != 0) listboxik.Items.Add(poleprvocisel[i]);
+                if (JePrvocislo(i)) listBox1.Items.Add(i);
             }
         }
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
             int n = Convert.ToInt32(numericUpDown1.Value);
-            int[] poleprvocisel = new int[n];
+            int[] polecisel = new int[n];
             Random rng = new Random();
             for (int i = 0; i < n; i++)
             {
-                textBox1.Text += Convert.ToString(rng.Next(2, 16)) + Environment.NewLine;
+                polecisel[i] = rng.Next(2, 16);
+                textBox1.Text += Convert.ToString(polecisel[i]) + Environment.NewLine;
             }
-            JePrvocislo(n, ref poleprvocisel);
-            Prepis(listBox1, n, ref poleprvocisel);
+            Prepis(listBox1, textBox1, polecisel);
         }
 
         private void button2_Click(object sender, EventArgs e)
